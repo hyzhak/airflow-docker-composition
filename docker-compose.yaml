@@ -27,8 +27,29 @@ services:
 #    - ALLOW_IP_RANGE
     # Uncomment these lines to persist data on the local filesystem.
     - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+    - 5432:5432
     volumes:
     - /var/db/1/airflow-postgis-data:/var/lib/postgresql/data/pgdata
+
+  mongo:
+    image: mongo:4.2.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+    - /var/db/1/airflow-mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express:0.49
+    restart: always
+    ports:
+      - 8084:8084
+    environment:
+      VCAP_APP_PORT: 8084
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
 
   webserver:
     image: puckel/docker-airflow:1.10.4
